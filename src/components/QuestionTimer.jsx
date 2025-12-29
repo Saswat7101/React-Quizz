@@ -5,7 +5,7 @@ export default function QuestionTimer({ timeout, onTimeOut }) {
 
   useEffect(() => {
     setTimeout(onTimeOut, timeout);
-  }, [onTimeOut, timeout]);
+  }, [timeout, onTimeOut]);
 
   useEffect(() => {
     setInterval(() => {
