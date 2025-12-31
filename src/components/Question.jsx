@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import QuestionTimer from "./QuestionTimer.jsx";
 import Answers from "./Answers.jsx";
@@ -24,16 +24,25 @@ export default function Question({ index, onSelectAnswer, onSkipAnswer }) {
     setAnswer({ selectedAnswer: answer, isCorrect: null });
   }
 
-  setTimeout(() => {
-    setAnswer({
-      selectedAnswer: answer,
-      isCorrect: QUESTIONS[index].answers[0] === answer,
-    });
+  useEffect(() => {
+    if (answer.selectedAnswer === "") return;
 
-    setTimeout(() => {
-      onSelectAnswer(answer);
-    }, 2000);
-  }, 1000);
+    const timer1 = setTimeout(() => {
+      setAnswer((prevAnswer) => ({
+        selectedAnswer: prevAnswer.selectedAnswer,
+        isCorrect: QUESTIONS[index].answers[0] === prevAnswer.selectedAnswer,
+      }));
+    }, 1000);
+
+    const timer2 = setTimeout(() => {
+      onSelectAnswer(answer.selectedAnswer);
+    }, 3000);
+
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
+  }, [answer.selectedAnswer, index, onSelectAnswer]);
 
   let answerState = "";
 
